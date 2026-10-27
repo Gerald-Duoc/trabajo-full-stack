@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contacto | Chascone Café</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <link href="estilos/estilos.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark navbar nav-con-fondo">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">☕ Chascone Café</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="productos.html">Productos</a></li>
+          <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
+          <li class="nav-item"><a class="nav-link" href="sobre-nosotros.html">Sobre nosotros</a></li>
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="contacto.html">Contacto</a></li>
+          <li class="nav-item" id="menuSesion"></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <main class="container">
+    <h1 class="mb-4">Contacto</h1>
+    <div class="row g-5">
+      <div class="col-lg-7">
+        <form id="formContacto">
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nombre" required>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Correo electrónico</label>
+            <input type="email" class="form-control" id="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="mensaje" class="form-label">Mensaje</label>
+            <textarea class="form-control" id="mensaje" rows="5" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Enviar mensaje</button>
+        </form>
+      </div>
+      <div class="col-lg-5">
+        <h5>Otros medios</h5>
+        <p class="mb-1">Correo: contacto@chasonnecafe.cl</p>
+        <p class="mb-1">Teléfono: +56 9 8765 4321</p>
+        <p class="mb-4">Dirección: Concepción, Región del Biobío</p>
+        <div class="img-placeholder" style="min-height: 200px;">
+          <img src="imagenes/Captura de pantalla 2026-09-22 172445.png" alt="mapa" class="img-fluid">
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="text-white text-center py-3">
+    <div class="container">
+      <small>&copy; 2026 Chascone Café. Todos los derechos reservados.</small>
+    </div>
+  </footer>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  <script src="usuarios.js"></script>
+  <script src="contacto.js"></script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registro | Chascone Café</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <link href="estilos/estilos.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark navbar nav-con-fondo">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Chascone Café</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="productos.html">Productos</a></li>
+          <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
+          <li class="nav-item"><a class="nav-link" href="sobre-nosotros.html">Sobre nosotros</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
+          <li class="nav-item"><a class="nav-link" href="carrito.html">Carrito</a></li>
+          <li class="nav-item" id="menuSesion"></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <h1 class="mb-4 text-center">Crear cuenta</h1>
+        <form id="formRegistro" novalidate>
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre completo</label>
+            <input type="text" class="form-control" id="nombre">
+          </div>
+          <div class="mb-3">
+            <label for="correo" class="form-label">Correo electrónico</label>
+            <input type="email" class="form-control" id="correo" placeholder="solo @duoc.cl, @profesor.duoc.cl o @gmail.com">
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" id="password">
+          </div>
+          <div class="mb-3">
+            <label for="confirmar" class="form-label">Confirmar contraseña</label>
+            <input type="password" class="form-control" id="confirmar">
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+          <p class="text-muted mt-3 mb-0 text-center">
+            ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </main>
+  <footer class="text-white text-center py-3">
+    <div class="container">
+      <small>&copy; 2026 Chascone Café. Todos los derechos reservados.</small>
+    </div>
+  </footer>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  <script src="usuarios.js"></script>
+  <script src="carrito.js"></script>
+  <script>
+    const formRegistro = document.getElementById('formRegistro');
+    const nombre = document.getElementById('nombre');
+    const correo = document.getElementById('correo');
+    const password = document.getElementById('password');
+    const confirmar = document.getElementById('confirmar');
+
+    function validarNombre() {
+      limpiarError(nombre);
+      if (nombre.value.trim() === '') {
+        mostrarError(nombre, 'El nombre es obligatorio.');
+        return false;
+      }
+      return true;
+    }
+
+    function validarCorreo() {
+      limpiarError(correo);
+      const valor = correo.value.trim();
+      if (valor === '') {
+        mostrarError(correo, 'El correo es obligatorio.');
+        return false;
+      }
+      if (!correoPermitido(valor)) {
+        mostrarError(correo, 'Solo se aceptan correos @duoc.cl, @profesor.duoc.cl o @gmail.com.');
+        return false;
+      }
+      if (correoRegistrado(valor)) {
+        mostrarError(correo, 'Este correo ya está registrado.');
+        return false;
+      }
+      return true;
+    }
+
+    function validarPassword() {
+      limpiarError(password);
+      if (password.value.length < 6) {
+        mostrarError(password, 'La contraseña debe tener al menos 6 caracteres.');
+        return false;
+      }
+      return true;
+    }
+
+    function validarConfirmacion() {
+      limpiarError(confirmar);
+      if (confirmar.value !== password.value) {
+        mostrarError(confirmar, 'Las contraseñas no coinciden.');
+        return false;
+      }
+      return true;
+    }
+
+    nombre.addEventListener('input', validarNombre);
+    correo.addEventListener('input', validarCorreo);
+    password.addEventListener('input', validarPassword);
+    confirmar.addEventListener('input', validarConfirmacion);
+
+    formRegistro.addEventListener('submit', function (event) {
+      event.preventDefault();
+      const okNombre = validarNombre();
+      const okCorreo = validarCorreo();
+      const okPassword = validarPassword();
+      const okConfirmacion = validarConfirmacion();
+
+      if (okNombre && okCorreo && okPassword && okConfirmacion) {
+        registrarUsuario(nombre.value, correo.value, password.value);
+        alert('Cuenta creada correctamente. Ahora puedes iniciar sesión.');
+        window.location.href = 'login.html';
+      }
+    });
+  </script>
+</body>
+</html>

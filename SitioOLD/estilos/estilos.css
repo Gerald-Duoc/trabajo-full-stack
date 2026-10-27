@@ -1,0 +1,150 @@
+
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-image: url('../imagenes/23669419_6842167.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+p {
+  color: #000000;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+main {
+  flex: 1; 
+}
+
+.nav-con-fondo {
+  background-color: saddlebrown;
+}
+
+footer {
+  background-color: saddlebrown;
+}
+
+.card {
+  background-color: transparent;
+  border: none;
+}
+
+.card-body {
+  width: 60%;
+  margin: 0 auto;
+}
+
+.img-placeholder {
+  background-color: black;
+  border: 2px dashed #adb5bd;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / 1;
+  width: 60%;
+  margin: 0 auto;   
+  overflow: hidden;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.img-placeholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+main {
+  padding-top: 2rem;
+  padding-bottom: 3rem;
+}
+
+.nav-con-img1 {
+  background-image: url(../imagenes/23669419_6842167.jpg);
+}
+
+.admin-panel {
+  background-color: rgba(30, 19, 12, 0.92);
+  color: #f2e8dc;
+  border-radius: 8px;
+  padding: 1.2rem;
+}
+
+.admin-panel h1,
+.admin-panel h4,
+.admin-panel h5 {
+  color: #f7ead8;
+}
+
+.admin-panel .text-muted {
+  color: #cbb89e !important;
+}
+
+.admin-tabla {
+  background-color: rgba(30, 19, 12, 0.9);
+  color: #f2e8dc;
+}
+
+.admin-tabla thead th {
+  background-color: #4a2f1b;
+  color: #f7ead8;
+  border-color: #6b4426;
+}
+
+.admin-tabla td,
+.admin-tabla th {
+  background-color: transparent;
+  border-color: #6b4426;
+  color: #f2e8dc;
+}
+
+.admin-tabla tbody tr:hover {
+  background-color: rgba(107, 68, 38, 0.45);
+}
+
+.admin-tabla tbody tr.table-danger {
+  background-color: rgba(140, 30, 30, 0.55);
+}
+
+.admin-tabla tbody tr.table-danger:hover {
+  background-color: rgba(140, 30, 30, 0.7);
+}
+
+.card-admin {
+  background-color: rgba(30, 19, 12, 0.92);
+  color: #f2e8dc;
+  border: 1px solid #6b4426;
+}
+
+.card-admin label {
+  color: #f7ead8;
+}
+
+.card-admin .form-control,
+.card-admin .form-select {
+  background-color: #3a2415;
+  border-color: #6b4426;
+  color: #f7ead8;
+}
+
+.card-admin .form-control::placeholder {
+  color: #cbb89e;
+}
+
+.tab-admin .nav-link {
+  color: #cbb89e;
+}
+
+.tab-admin .nav-link.active {
+  background-color: #4a2f1b;
+  color: #f7ead8;
+  border-color: #6b4426;
+}

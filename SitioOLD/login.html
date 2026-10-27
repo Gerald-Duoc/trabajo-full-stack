@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Iniciar sesión | Chascone Café</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <link href="estilos/estilos.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark navbar nav-con-fondo">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Chascone Café</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="productos.html">Productos</a></li>
+          <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
+          <li class="nav-item"><a class="nav-link" href="sobre-nosotros.html">Sobre nosotros</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
+          <li class="nav-item"><a class="nav-link" href="carrito.html">Carrito</a></li>
+          <li class="nav-item" id="menuSesion"></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <h1 class="mb-4 text-center">Iniciar sesión</h1>
+        <form id="formLogin" novalidate>
+          <div class="mb-3">
+            <label for="correo" class="form-label">Correo electrónico</label>
+            <input type="email" class="form-control" id="correo" autocomplete="username">
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" id="password" autocomplete="current-password">
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+          <p class="text-muted mt-3 mb-0 text-center">
+            ¿No tienes cuenta? <a href="registro.html">Regístrate</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </main>
+  <footer class="text-white text-center py-3">
+    <div class="container">
+      <small>&copy; 2026 Chascone Café. Todos los derechos reservados.</small>
+    </div>
+  </footer>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  <script src="usuarios.js"></script>
+  <script src="carrito.js"></script>
+  <script>
+    const formLogin = document.getElementById('formLogin');
+    const correo = document.getElementById('correo');
+    const password = document.getElementById('password');
+
+    formLogin.addEventListener('submit', function (event) {
+      event.preventDefault();
+      limpiarError(correo);
+      limpiarError(password);
+
+      if (correo.value.trim() === '') {
+        mostrarError(correo, 'El correo es obligatorio.');
+        return;
+      }
+      if (password.value === '') {
+        mostrarError(password, 'La contraseña es obligatoria.');
+        return;
+      }
+
+      const usuario = iniciarSesion(correo.value, password.value);
+      if (!usuario) {
+        mostrarError(correo, 'Correo o contraseña incorrectos.');
+        return;
+      }
+      alert('Bienvenido, ' + usuario.nombre + '.');
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>
