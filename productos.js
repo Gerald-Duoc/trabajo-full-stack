@@ -33,3 +33,51 @@ function guardarProductosPersistidos(lista) {
 }
 
 const PRODUCTOS = obtenerProductosPersistidos();
+
+function normalizarTexto(texto) {
+  return String(texto == null ? '' : texto)
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
+
+function filtrarProductos(lista, texto, categoria) {
+  const busqueda = normalizarTexto(texto).trim();
+  return lista.filter(function (producto) {
+    const coincideCategoria = !categoria || categoria === 'Todas' || producto.categoria === categoria;
+    const coincideTexto = busqueda === '' ||
+      normalizarTexto(producto.nombre).indexOf(busqueda) !== -1 ||
+      normalizarTexto(producto.descripcion).indexOf(busqueda) !== -1;
+    return coincideCategoria && coincideTexto;
+  });
+}
+
+function ordenarPorPrecio(lista, sentido) {
+  const copia = lista.slice();
+  if (sentido === 'asc') {
+    copia.sort(function (a, b) { return Number(a.precio) - Number(b.precio); });
+  } else if (sentido === 'desc') {
+    copia.sort(function (a, b) { return Number(b.precio) - Number(a.precio); });
+  }
+  return copia;
+}
+
+function obtenerCategorias(lista) {
+  const categorias = [];
+  lista.forEach(function (producto) {
+    if (producto.categoria && categorias.indexOf(producto.categoria) === -1) {
+      categorias.push(producto.categoria);
+    }
+  });
+  return categorias.sort();
+}
+
+function estaAgotado(producto) {
+  return Number(producto.stock) <= 0;
+}
+
+function stockBajo(producto) {
+  const stock = Number(producto.stock);
+  const critico = Number(producto.stockCritico);
+  return stock > 0 && stock <= critico;
+}

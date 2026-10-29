@@ -36,7 +36,33 @@
     <p class="text-muted mb-4">
       Nuestras bebidas, utensilios y accesorios para preparar el mejor café.
     </p>
+
+    <div class="row g-3 align-items-end mb-3">
+      <div class="col-12 col-lg-5">
+        <label for="buscador" class="form-label">Buscar producto</label>
+        <input type="search" id="buscador" class="form-control" placeholder="Ej: espresso, moka, taza...">
+      </div>
+      <div class="col-6 col-lg-3">
+        <label for="filtroCategoria" class="form-label">Categoría</label>
+        <select id="filtroCategoria" class="form-select">
+          <option value="Todas">Todas</option>
+        </select>
+      </div>
+      <div class="col-6 col-lg-4">
+        <label for="ordenPrecio" class="form-label">Ordenar por precio</label>
+        <select id="ordenPrecio" class="form-select">
+          <option value="">Recomendado</option>
+          <option value="asc">Menor a mayor</option>
+          <option value="desc">Mayor a menor</option>
+        </select>
+      </div>
+    </div>
+
+    <p class="text-muted small" id="contadorResultados"></p>
     <div class="row g-4" id="productosGrid"></div>
+    <p class="text-center text-muted py-5" id="sinResultados" style="display:none;">
+      No encontramos productos con esos filtros. Prueba con otra palabra o categoría.
+    </p>
   </main>
   <footer class="text-white text-center py-3">
     <div class="container">
@@ -49,23 +75,81 @@
   <script src="carrito.js"></script>
   <script>
     const grid = document.getElementById('productosGrid');
-    PRODUCTOS.forEach(function (producto) {
+    const buscador = document.getElementById('buscador');
+    const filtroCategoria = document.getElementById('filtroCategoria');
+    const ordenPrecio = document.getElementById('ordenPrecio');
+    const contadorResultados = document.getElementById('contadorResultados');
+    const sinResultados = document.getElementById('sinResultados');
+
+    function escaparHtml(texto) {
+      return String(texto)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function crearTarjeta(producto) {
+      const agotado = estaAgotado(producto);
+      let etiqueta = '';
+      if (agotado) {
+        etiqueta = '<span class="badge bg-danger mb-2 align-self-start">Sin stock</span>';
+      } else if (stockBajo(producto)) {
+        etiqueta = '<span class="badge bg-warning text-dark mb-2 align-self-start">Quedan ' + producto.stock + '</span>';
+      }
+
+      const boton = agotado
+        ? '<button class="btn btn-secondary flex-fill" disabled>Sin stock</button>'
+        : '<button class="btn btn-primary flex-fill" onclick="agregarAlCarrito(\'' + producto.id + '\')">Añadir al carrito</button>';
+
       const col = document.createElement('div');
       col.className = 'col-sm-6 col-lg-4';
       col.innerHTML =
         '<div class="card h-100">' +
-        '<div class="img-placeholder"><img src="' + producto.img + '" alt="' + producto.nombre + '" class="img-fluid"></div>' +
+        '<div class="img-placeholder"><img src="' + escaparHtml(producto.img) + '" alt="' + escaparHtml(producto.nombre) + '" class="img-fluid"></div>' +
         '<div class="card-body d-flex flex-column">' +
-        '<h5 class="card-title">' + producto.nombre + '</h5>' +
-        '<p class="card-text text-muted">' + producto.descripcion + '</p>' +
-        '<p class="fw-bold mb-3" style="font-size: 25px;">$' + producto.precio.toLocaleString('es-CL') + '</p>' +
+        etiqueta +
+        '<h5 class="card-title">' + escaparHtml(producto.nombre) + '</h5>' +
+        '<p class="card-text text-muted">' + escaparHtml(producto.descripcion) + '</p>' +
+        '<p class="fw-bold mb-1" style="font-size: 25px;">$' + Number(producto.precio).toLocaleString('es-CL') + '</p>' +
+        '<p class="text-muted small mb-3">' + escaparHtml(producto.categoria) + '</p>' +
         '<div class="d-flex gap-2 mt-auto">' +
-        '<a class="btn btn-outline-primary flex-fill" href="detalle.html?id=' + producto.id + '">Ver detalle</a>' +
-        '<button class="btn btn-primary flex-fill" onclick="agregarAlCarrito(\'' + producto.id + '\')">Añadir al carrito</button>' +
+        '<a class="btn btn-outline-primary flex-fill" href="detalle.html?id=' + encodeURIComponent(producto.id) + '">Ver detalle</a>' +
+        boton +
         '</div>' +
         '</div></div>';
-      grid.appendChild(col);
+      return col;
+    }
+
+    function renderCatalogo() {
+      const filtrados = ordenarPorPrecio(
+        filtrarProductos(PRODUCTOS, buscador.value, filtroCategoria.value),
+        ordenPrecio.value
+      );
+
+      grid.innerHTML = '';
+      filtrados.forEach(function (producto) {
+        grid.appendChild(crearTarjeta(producto));
+      });
+
+      contadorResultados.textContent =
+        'Mostrando ' + filtrados.length + ' de ' + PRODUCTOS.length + ' productos';
+      sinResultados.style.display = filtrados.length === 0 ? 'block' : 'none';
+    }
+
+    obtenerCategorias(PRODUCTOS).forEach(function (categoria) {
+      const opcion = document.createElement('option');
+      opcion.value = categoria;
+      opcion.textContent = categoria;
+      filtroCategoria.appendChild(opcion);
     });
+
+    buscador.addEventListener('input', renderCatalogo);
+    filtroCategoria.addEventListener('change', renderCatalogo);
+    ordenPrecio.addEventListener('change', renderCatalogo);
+
+    renderCatalogo();
   </script>
 </body>
 </html>
