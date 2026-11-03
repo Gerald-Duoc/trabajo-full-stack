@@ -32,6 +32,7 @@
     <div class="row justify-content-center">
       <div class="col-md-6 col-lg-5">
         <h1 class="mb-4 text-center">Iniciar sesión</h1>
+        <div id="mensajeLogin" class="alert alert-danger d-none" role="alert"></div>
         <form id="formLogin" novalidate>
           <div class="mb-3">
             <label for="correo" class="form-label">Correo electrónico</label>
@@ -61,27 +62,61 @@
     const formLogin = document.getElementById('formLogin');
     const correo = document.getElementById('correo');
     const password = document.getElementById('password');
+    const mensajeLogin = document.getElementById('mensajeLogin');
+
+    function ocultarMensaje() {
+      mensajeLogin.classList.add('d-none');
+      mensajeLogin.textContent = '';
+    }
+
+    function mostrarMensaje(texto) {
+      mensajeLogin.textContent = texto;
+      mensajeLogin.classList.remove('d-none');
+    }
+
+    function validarCorreo() {
+      return validarCampo(correo, errorCorreoLogin(correo.value));
+    }
+
+    function validarPassword() {
+      return validarCampo(password, errorPassword(password.value));
+    }
+
+    correo.addEventListener('blur', validarCorreo);
+    correo.addEventListener('input', function () {
+      ocultarMensaje();
+      if (correo.classList.contains('is-invalid')) validarCorreo();
+    });
+
+    password.addEventListener('blur', validarPassword);
+    password.addEventListener('input', function () {
+      ocultarMensaje();
+      if (password.classList.contains('is-invalid')) validarPassword();
+    });
+
+    // Si venimos desde el registro, precargamos el correo.
+    const correoPrecargado = new URLSearchParams(window.location.search).get('correo');
+    if (correoPrecargado) {
+      correo.value = correoPrecargado;
+      password.focus();
+    }
 
     formLogin.addEventListener('submit', function (event) {
       event.preventDefault();
-      limpiarError(correo);
-      limpiarError(password);
+      ocultarMensaje();
 
-      if (correo.value.trim() === '') {
-        mostrarError(correo, 'El correo es obligatorio.');
-        return;
-      }
-      if (password.value === '') {
-        mostrarError(password, 'La contraseña es obligatoria.');
-        return;
-      }
+      const okCorreo = validarCorreo();
+      const okPassword = validarPassword();
+      if (!okCorreo || !okPassword) return;
 
       const usuario = iniciarSesion(correo.value, password.value);
       if (!usuario) {
+        mostrarMensaje('Correo o contraseña incorrectos. Verifica tus datos.');
         mostrarError(correo, 'Correo o contraseña incorrectos.');
         return;
       }
-      alert('Bienvenido, ' + usuario.nombre + '.');
+
+      alert('Bienvenido, ' + nombreCompleto(usuario) + '.');
       window.location.href = 'index.html';
     });
   </script>

@@ -52,10 +52,19 @@ imagenes/             Imágenes generales
 | `chasonneCarrito` | Items del carrito |
 | `chasonnePedidos` | Pedidos finalizados |
 | `chasonneUsuarios` | Usuarios registrados |
-| `chasonneSesion` | Sesión activa (nombre, correo, rol) |
+| `chasonneSesion` | Sesión activa (RUN, nombre, correo, rol) |
 | `chasonneAlertas` | Alertas de stock crítico |
 
 Usuario inicial: `admin@duoc.cl` / `admin123` (rol Administrador, creado por código).
+
+### Datos de cada usuario
+
+`id`, `run`, `nombre`, `apellidoPaterno`, `apellidoMaterno`, `fechaNacimiento`,
+`correo`, `password`, `region`, `comuna`, `direccion`, `rol`, `fechaRegistro`.
+
+Validaciones del registro: RUN con dígito verificador (módulo 11), mayoría de edad,
+correo con formato y dominio permitido, región/comuna coherentes, dirección de 5 a 100
+caracteres y contraseña de 6 a 20 caracteres sin espacios.
 
 ## Roles
 
