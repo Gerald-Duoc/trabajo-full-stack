@@ -21,6 +21,7 @@
           <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
           <li class="nav-item"><a class="nav-link" href="sobre-nosotros.html">Sobre nosotros</a></li>
           <li class="nav-item"><a class="nav-link active" aria-current="page" href="contacto.html">Contacto</a></li>
+          <li class="nav-item"><a class="nav-link" href="carrito.html">Carrito</a></li>
           <li class="nav-item" id="menuSesion"></li>
         </ul>
       </div>
@@ -30,18 +31,25 @@
     <h1 class="mb-4">Contacto</h1>
     <div class="row g-5">
       <div class="col-lg-7">
-        <form id="formContacto">
+        <div id="alertaContacto" aria-live="polite"></div>
+        <form id="formContacto" novalidate>
           <div class="mb-3">
             <label for="nombre" class="form-label">Nombre</label>
-            <input type="text" class="form-control" id="nombre" required>
+            <input type="text" class="form-control" id="nombre" maxlength="100" required>
+            <div class="form-text">Entre 3 y 100 caracteres.</div>
           </div>
           <div class="mb-3">
             <label for="email" class="form-label">Correo electrónico</label>
             <input type="email" class="form-control" id="email" required>
+            <div class="form-text">Solo @duoc.cl, @profesor.duoc.cl o @gmail.com.</div>
           </div>
           <div class="mb-3">
             <label for="mensaje" class="form-label">Mensaje</label>
-            <textarea class="form-control" id="mensaje" rows="5" required></textarea>
+            <textarea class="form-control" id="mensaje" rows="5" maxlength="500" required></textarea>
+            <div class="d-flex justify-content-between flex-wrap">
+              <div class="form-text">Entre 10 y 500 caracteres.</div>
+              <div class="form-text" id="contadorMensaje">0 / 500 caracteres</div>
+            </div>
           </div>
           <button type="submit" class="btn btn-primary">Enviar mensaje</button>
         </form>
@@ -64,6 +72,7 @@
   </footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
   <script src="usuarios.js"></script>
+  <script src="mensajes.js"></script>
   <script src="contacto.js"></script>
 </body>
 </html>

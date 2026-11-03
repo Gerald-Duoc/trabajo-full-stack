@@ -42,18 +42,24 @@ function mostrarSeccion(nombre) {
   document.getElementById('seccionProductos').style.display = nombre === 'productos' ? 'block' : 'none';
   document.getElementById('seccionUsuarios').style.display = nombre === 'usuarios' ? 'block' : 'none';
   document.getElementById('seccionPedidos').style.display = nombre === 'pedidos' ? 'block' : 'none';
+  document.getElementById('seccionMensajes').style.display = nombre === 'mensajes' ? 'block' : 'none';
   document.getElementById('seccionReportes').style.display = nombre === 'reportes' ? 'block' : 'none';
   document.getElementById('seccionAlertas').style.display = nombre === 'alertas' ? 'block' : 'none';
 
   document.getElementById('tabProductosBtn').classList.toggle('active', nombre === 'productos');
   document.getElementById('tabUsuariosBtn').classList.toggle('active', nombre === 'usuarios');
   document.getElementById('tabPedidosBtn').classList.toggle('active', nombre === 'pedidos');
+  document.getElementById('tabMensajesBtn').classList.toggle('active', nombre === 'mensajes');
   document.getElementById('tabReportesBtn').classList.toggle('active', nombre === 'reportes');
   document.getElementById('tabAlertasBtn').classList.toggle('active', nombre === 'alertas');
 
   if (nombre === 'productos') renderizarProductos();
   if (nombre === 'usuarios') renderizarUsuarios();
   if (nombre === 'pedidos') renderizarPedidos();
+  if (nombre === 'mensajes') {
+    renderizarMensajes();
+    actualizarBadgeMensajes();
+  }
   if (nombre === 'reportes') renderizarReportes();
   if (nombre === 'alertas') renderizarAlertas();
 }
@@ -668,6 +674,111 @@ function exportarReporteCSV() {
   URL.revokeObjectURL(url);
 }
 
+/* ---------- Mensajes de contacto ---------- */
+
+function actualizarBadgeMensajes() {
+  const badge = document.getElementById('badgeMensajes');
+  if (!badge) return;
+  const nuevos = cantidadMensajesNuevos();
+  badge.textContent = nuevos;
+  badge.style.display = nuevos > 0 ? 'inline-block' : 'none';
+}
+
+function renderizarMensajes() {
+  const tbody = document.getElementById('tablaMensajes');
+  const selector = document.getElementById('filtroMensajes');
+  const filtro = selector ? selector.value : 'todos';
+  const todos = leerMensajes().slice().reverse();
+  const lista = filtro === 'todos'
+    ? todos
+    : todos.filter(function (m) { return m.estado === filtro; });
+
+  const nota = document.getElementById('notaMensajes');
+  if (nota) {
+    nota.textContent = 'Total de mensajes: ' + todos.length +
+      ' — Sin leer: ' + cantidadMensajesNuevos() + '.';
+  }
+
+  if (lista.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No hay mensajes con ese filtro.</td></tr>';
+    return;
+  }
+
+  let html = '';
+  lista.forEach(function (m) {
+    const esNuevo = m.estado === 'Nuevo';
+    const estado = esNuevo
+      ? '<span class="badge bg-warning text-dark">Nuevo</span>'
+      : '<span class="badge bg-success">Leído</span>';
+    const botonEstado = esNuevo
+      ? '<button class="btn btn-sm btn-outline-success me-1" onclick="marcarMensajeLeido(\'' + m.id + '\')">Marcar leído</button>'
+      : '<button class="btn btn-sm btn-outline-warning me-1" onclick="marcarMensajeNuevo(\'' + m.id + '\')">Marcar nuevo</button>';
+
+    html += '<tr>' +
+      '<td class="text-nowrap">' + escaparHtml(m.fecha) + '</td>' +
+      '<td>' + escaparHtml(m.nombre) + '</td>' +
+      '<td><a href="mailto:' + escaparHtml(m.correo) + '">' + escaparHtml(m.correo) + '</a></td>' +
+      '<td><div style="max-width:340px;white-space:pre-wrap;">' + escaparHtml(m.mensaje) + '</div></td>' +
+      '<td>' + estado + '</td>' +
+      '<td class="text-nowrap">' + botonEstado +
+      '<button class="btn btn-sm btn-outline-danger" onclick="borrarMensaje(\'' + m.id + '\')">Eliminar</button>' +
+      '</td></tr>';
+  });
+  tbody.innerHTML = html;
+}
+
+function marcarMensajeLeido(id) {
+  if (cambiarEstadoMensaje(id, 'Leído')) {
+    renderizarMensajes();
+    actualizarBadgeMensajes();
+  }
+}
+
+function marcarMensajeNuevo(id) {
+  if (cambiarEstadoMensaje(id, 'Nuevo')) {
+    renderizarMensajes();
+    actualizarBadgeMensajes();
+  }
+}
+
+function borrarMensaje(id) {
+  if (!confirm('¿Seguro que deseas eliminar este mensaje?')) return;
+  eliminarMensajeContacto(id);
+  renderizarMensajes();
+  actualizarBadgeMensajes();
+}
+
+function exportarMensajesCSV() {
+  const mensajes = leerMensajes();
+
+  if (mensajes.length === 0) {
+    alert('No hay mensajes para exportar.');
+    return;
+  }
+
+  const lineas = ['Fecha;Nombre;Correo;Estado;Mensaje'];
+  mensajes.forEach(function (m) {
+    lineas.push([
+      String(m.fecha || '').replace(/;/g, ','),
+      String(m.nombre || '').replace(/;/g, ','),
+      m.correo,
+      m.estado,
+      String(m.mensaje || '').replace(/[\r\n]+/g, ' ').replace(/;/g, ',')
+    ].join(';'));
+  });
+
+  const contenido = '\uFEFF' + lineas.join('\r\n');
+  const blob = new Blob([contenido], { type: 'text/csv;charset=utf-8;' });
+  const enlace = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  enlace.href = url;
+  enlace.download = 'mensajes-contacto.csv';
+  document.body.appendChild(enlace);
+  enlace.click();
+  document.body.removeChild(enlace);
+  URL.revokeObjectURL(url);
+}
+
 document.getElementById('formProducto').addEventListener('submit', function (event) {
   event.preventDefault();
   guardarProductoDesdeFormulario();
@@ -694,5 +805,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   actualizarBadgeAlertas();
+  actualizarBadgeMensajes();
   renderizarProductos();
 });
