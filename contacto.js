@@ -1,78 +1,128 @@
+/* Formulario de contacto: validaciones con límites y guardado en LocalStorage. */
+
+const LIMITE_NOMBRE = 100;
+const LIMITE_MENSAJE = 500;
+const MINIMO_MENSAJE = 10;
+const MINIMO_NOMBRE = 3;
+
 const formContacto = document.getElementById('formContacto');
 const nombre = document.getElementById('nombre');
 const email = document.getElementById('email');
 const mensaje = document.getElementById('mensaje');
+const contadorMensaje = document.getElementById('contadorMensaje');
+const alertaContacto = document.getElementById('alertaContacto');
 
-const erroresValidos = ['@duoc.cl', '@profesor.duoc.cl', '@gmail.com'];
+/* ---------- Validaciones ---------- */
 
-function correoPermitido(correo) {
-  const dominio = correo.substring(correo.lastIndexOf('@'));
-  return erroresValidos.includes(dominio);
+function errorNombreContacto(valor) {
+  const v = String(valor || '').trim();
+  if (v === '') return 'El nombre es obligatorio.';
+  if (v.length < MINIMO_NOMBRE) return 'El nombre debe tener al menos ' + MINIMO_NOMBRE + ' caracteres.';
+  if (v.length > LIMITE_NOMBRE) return 'El nombre no puede superar los ' + LIMITE_NOMBRE + ' caracteres.';
+  if (!/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'-]+$/.test(v)) return 'El nombre solo puede contener letras.';
+  return '';
 }
 
-function mostrarError(input, mensaje) {
-  let feedback = input.parentElement.querySelector('.invalid-feedback');
-  if (!feedback) {
-    feedback = document.createElement('div');
-    feedback.className = 'invalid-feedback';
-    input.parentElement.appendChild(feedback);
-  }
-  feedback.textContent = mensaje;
-  input.classList.add('is-invalid');
-}
-
-function limpiarError(input) {
-  input.classList.remove('is-invalid');
-  const feedback = input.parentElement.querySelector('.invalid-feedback');
-  if (feedback) {
-    feedback.remove();
-  }
-}
-
-function validarNombre() {
-  limpiarError(nombre);
-  if (nombre.value.trim() === '') {
-    mostrarError(nombre, 'El nombre es obligatorio.');
-    return false;
-  }
-  return true;
-}
-
-function validarEmail() {
-  limpiarError(email);
-  const valor = email.value.trim();
-  if (valor === '') {
-    mostrarError(email, 'El correo electrónico es obligatorio.');
-    return false;
-  }
+function errorCorreoContacto(valor) {
+  const formato = errorCorreoFormato(valor);
+  if (formato !== '') return formato;
   if (!correoPermitido(valor)) {
-    mostrarError(email, 'Solo se aceptan correos @duoc.cl, @profesor.duoc.cl o @gmail.com.');
-    return false;
+    return 'Solo se aceptan correos @duoc.cl, @profesor.duoc.cl o @gmail.com.';
   }
-  return true;
+  return '';
 }
 
-function validarMensaje() {
-  limpiarError(mensaje);
-  if (mensaje.value.trim() === '') {
-    mostrarError(mensaje, 'El mensaje es obligatorio.');
-    return false;
-  }
-  return true;
+function errorMensajeContacto(valor) {
+  const v = String(valor || '').trim();
+  if (v === '') return 'El mensaje es obligatorio.';
+  if (v.length < MINIMO_MENSAJE) return 'El mensaje debe tener al menos ' + MINIMO_MENSAJE + ' caracteres.';
+  if (v.length > LIMITE_MENSAJE) return 'El mensaje no puede superar los ' + LIMITE_MENSAJE + ' caracteres.';
+  return '';
 }
 
-nombre.addEventListener('input', validarNombre);
-email.addEventListener('input', validarEmail);
-mensaje.addEventListener('input', validarMensaje);
+function validarNombreContacto() {
+  return validarCampo(nombre, errorNombreContacto(nombre.value));
+}
+
+function validarCorreoContacto() {
+  return validarCampo(email, errorCorreoContacto(email.value));
+}
+
+function validarMensajeContacto() {
+  return validarCampo(mensaje, errorMensajeContacto(mensaje.value));
+}
+
+/* ---------- Contador y avisos ---------- */
+
+function actualizarContadorMensaje() {
+  if (!contadorMensaje) return;
+  const largo = mensaje.value.length;
+  contadorMensaje.textContent = largo + ' / ' + LIMITE_MENSAJE + ' caracteres';
+  contadorMensaje.classList.toggle('text-danger', largo >= LIMITE_MENSAJE);
+}
+
+function mostrarAlertaContacto(texto, tipo) {
+  if (!alertaContacto) return;
+  alertaContacto.innerHTML =
+    '<div class="alert alert-' + (tipo || 'success') + ' alert-dismissible fade show" role="alert">' +
+    escaparHtml(texto) +
+    '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>' +
+    '</div>';
+  alertaContacto.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function limpiarAlertaContacto() {
+  if (alertaContacto) alertaContacto.innerHTML = '';
+}
+
+/* ---------- Eventos ---------- */
+
+nombre.addEventListener('input', validarNombreContacto);
+email.addEventListener('input', validarCorreoContacto);
+mensaje.addEventListener('input', function () {
+  validarMensajeContacto();
+  actualizarContadorMensaje();
+});
 
 formContacto.addEventListener('submit', function (event) {
   event.preventDefault();
-  const okNombre = validarNombre();
-  const okEmail = validarEmail();
-  const okMensaje = validarMensaje();
+  limpiarAlertaContacto();
 
-  if (okNombre && okEmail && okMensaje) {
-    formContacto.reset();
-    alert('Mensaje enviado correctamente.');
+  const okNombre = validarNombreContacto();
+  const okCorreo = validarCorreoContacto();
+  const okMensaje = validarMensajeContacto();
+
+  if (!okNombre || !okCorreo || !okMensaje) {
+    const primero = formContacto.querySelector('.is-invalid');
+    if (primero) primero.focus();
+    return;
+  }
+
+  const sesion = sesionActual();
+  const correoRespuesta = email.value.trim().toLowerCase();
+
+  agregarMensajeContacto({
+    nombre: nombre.value,
+    correo: correoRespuesta,
+    mensaje: mensaje.value,
+    usuario: sesion ? sesion.correo : ''
+  });
+
+  formContacto.reset();
+  [nombre, email, mensaje].forEach(limpiarError);
+  actualizarContadorMensaje();
+  mostrarAlertaContacto(
+    '¡Gracias! Tu mensaje fue guardado. Te responderemos a ' + correoRespuesta + '.',
+    'success'
+  );
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  actualizarContadorMensaje();
+
+  const sesion = sesionActual();
+  if (sesion) {
+    nombre.value = sesion.nombre || '';
+    email.value = sesion.correo || '';
   }
 });

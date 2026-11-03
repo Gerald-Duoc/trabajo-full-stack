@@ -1,6 +1,7 @@
 const ARTICULOS = [
   {
     id: 'beneficios',
+    categoria: 'Salud',
     titulo: '5 beneficios del café para tu día',
     fecha: '12 de septiembre de 2026',
     imagen: 'fotos/Espresso.webp',
@@ -13,6 +14,7 @@ const ARTICULOS = [
   },
   {
     id: 'primer-metodo',
+    categoria: 'Preparación',
     titulo: 'Cómo elegir tu primer método de preparación',
     fecha: '5 de septiembre de 2026',
     imagen: 'fotos/Prensa Francesa 500 ml.webp',
@@ -25,6 +27,7 @@ const ARTICULOS = [
   },
   {
     id: 'espresso',
+    categoria: 'Preparación',
     titulo: 'El espresso: la base de todo',
     fecha: '28 de agosto de 2026',
     imagen: 'fotos/Cafetera Moka 6 tazas.webp',
@@ -37,6 +40,7 @@ const ARTICULOS = [
   },
   {
     id: 'datos-curiosos',
+    categoria: 'Curiosidades',
     titulo: '10 datos curiosos del café que no conocías',
     fecha: '20 de agosto de 2026',
     imagen: 'fotos/Cortado.jpg',
@@ -56,14 +60,55 @@ const ARTICULOS = [
   }
 ];
 
+const CATEGORIAS_BLOG = ['Salud', 'Preparación', 'Curiosidades'];
+
+function normalizarBlog(texto) {
+  return String(texto || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim();
+}
+
+function articulosFiltrados() {
+  const buscador = document.getElementById('buscadorBlog');
+  const selector = document.getElementById('categoriaBlog');
+  const texto = normalizarBlog(buscador ? buscador.value : '');
+  const categoria = selector ? selector.value : 'todas';
+
+  return ARTICULOS.filter(function (a) {
+    if (categoria !== 'todas' && a.categoria !== categoria) return false;
+    if (texto === '') return true;
+    const contenido = [a.titulo, a.resumen, a.categoria].concat(a.contenido).join(' ');
+    return normalizarBlog(contenido).indexOf(texto) !== -1;
+  });
+}
+
+function actualizarContadorBlog(cantidad) {
+  const contador = document.getElementById('contadorBlog');
+  if (!contador) return;
+  contador.textContent = 'Mostrando ' + cantidad + ' de ' + ARTICULOS.length + ' artículos';
+}
+
 function renderizarBlog() {
   const contenedor = document.getElementById('listaBlog');
+  const lista = articulosFiltrados();
+  actualizarContadorBlog(lista.length);
+
+  if (lista.length === 0) {
+    contenedor.innerHTML =
+      '<div class="alert alert-secondary">No encontramos artículos con ese criterio. ' +
+      'Prueba con otra palabra o cambia la categoría.</div>';
+    return;
+  }
+
   let html = '<div class="row g-4">';
-  ARTICULOS.forEach(function (a) {
+  lista.forEach(function (a) {
     html += '<div class="col-md-6 col-lg-4">' +
       '<div class="card h-100">' +
       '<div class="img-placeholder"><img src="' + a.imagen + '" alt="' + a.titulo + '" class="img-fluid"></div>' +
       '<div class="card-body d-flex flex-column">' +
+      '<span class="badge bg-secondary mb-2">' + a.categoria + '</span>' +
       '<span class="text-muted small mb-1">' + a.fecha + '</span>' +
       '<h5 class="card-title">' + a.titulo + '</h5>' +
       '<p class="card-text text-muted">' + a.resumen + '</p>' +
@@ -89,6 +134,7 @@ function verArticulo(id) {
   contenedor.innerHTML =
     '<button class="btn btn-outline-secondary mb-4" onclick="volverBlog()">← Volver al blog</button>' +
     '<article class="card card-body border-0 shadow-sm">' +
+    '<span class="badge bg-secondary mb-2 align-self-start">' + articulo.categoria + '</span>' +
     '<span class="text-muted small mb-1">' + articulo.fecha + '</span>' +
     '<h1 class="mb-3">' + articulo.titulo + '</h1>' +
     '<img src="' + articulo.imagen + '" alt="' + articulo.titulo + '" class="img-fluid rounded-3 mb-3" style="max-height:350px;object-fit:cover;">' +

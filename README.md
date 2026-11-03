@@ -35,9 +35,10 @@ admin.html            Panel administrativo (según rol)
 productos.js          Catálogo y render de productos
 carrito.js            Carrito: agregar, cantidades, total y pedido
 usuarios.js           Registro, login, sesión y roles
-contacto.js           Validaciones del formulario de contacto
-blog.js               Artículos del blog
-admin.js              Panel: productos, usuarios, pedidos y alertas
+mensajes.js           Guardado y estados de los mensajes de contacto
+contacto.js           Validaciones y envío del formulario de contacto
+blog.js               Artículos del blog, búsqueda y filtro por categoría
+admin.js              Panel: productos, usuarios, pedidos, mensajes y reportes
 
 estilos/estilos.css   Hoja de estilos única y responsiva
 fotos/                Imágenes de productos
@@ -54,6 +55,7 @@ imagenes/             Imágenes generales
 | `chasonneUsuarios` | Usuarios registrados |
 | `chasonneSesion` | Sesión activa (RUN, nombre, correo, rol) |
 | `chasonneAlertas` | Alertas de stock crítico |
+| `chasonneMensajes` | Mensajes enviados desde el formulario de contacto |
 
 Usuario inicial: `admin@duoc.cl` / `admin123` (rol Administrador, creado por código).
 
@@ -79,10 +81,24 @@ Cada pedido guarda `id`, `fecha` (texto), `fechaISO` (para filtros), `cliente`, 
 y `total`. El reporte de ventas del panel muestra pedidos, venta total, unidades y ticket
 promedio, se puede filtrar por período y exportar a CSV.
 
+### Contacto y blog
+
+El formulario de contacto acepta un nombre de 3 a 100 caracteres, un correo con formato
+válido y dominio permitido, y un mensaje de 10 a 500 caracteres. Al enviarlo, el mensaje
+se guarda en `chasonneMensajes` con `id`, `nombre`, `correo`, `mensaje`, `fecha`, `fechaISO`,
+`estado` (`Nuevo` o `Leído`) y el correo del usuario en sesión, si existe.
+
+El panel tiene una pestaña **Mensajes** donde se pueden leer, marcar como leídos o nuevos,
+filtrar por estado, eliminar y exportar a CSV. El contador rojo de la pestaña indica
+cuántos mensajes están sin leer.
+
+El blog permite buscar artículos por texto (sin distinguir tildes ni mayúsculas) y filtrar
+por categoría: Salud, Preparación y Curiosidades.
+
 ## Roles
 
-- **Administrador:** panel completo (productos, usuarios, pedidos, reportes y alertas).
-- **Vendedor:** productos (sin eliminar), pedidos y avisos de stock.
+- **Administrador:** panel completo (productos, usuarios, pedidos, mensajes, reportes y alertas).
+- **Vendedor:** productos (sin eliminar), pedidos, mensajes y avisos de stock.
 - **Cliente:** tienda pública, carrito, contacto y blog.
 
 ## Ramas
