@@ -1,4 +1,5 @@
 const PRODUCTOS_KEY = 'chasonneProductos';
+const PREFIJOS_CODIGO = { Bebidas: 'BEB', Utensilios: 'UTI', Accesorios: 'ACC' };
 
 const PRODUCTOS_BASE = [
   { id: 'espresso', nombre: 'Espresso', categoria: 'Bebidas', descripcion: 'Café corto e intenso, base de todos los demás', precio: 1500, stock: 100, stockCritico: 10, img: 'fotos/Espresso.webp' },
@@ -19,17 +20,70 @@ const PRODUCTOS_BASE = [
 ];
 
 function obtenerProductosPersistidos() {
+  let lista = null;
   try {
     const datos = JSON.parse(localStorage.getItem(PRODUCTOS_KEY));
-    if (Array.isArray(datos)) return datos;
+    if (Array.isArray(datos)) lista = datos;
   } catch (e) {
   }
-  localStorage.setItem(PRODUCTOS_KEY, JSON.stringify(PRODUCTOS_BASE));
-  return PRODUCTOS_BASE.slice();
+
+  let cambios = lista === null;
+  if (cambios) {
+    lista = PRODUCTOS_BASE.map(function (producto) {
+      return Object.assign({}, producto);
+    });
+  }
+
+  // Asigna código a los productos antiguos que no lo tengan.
+  lista.forEach(function (producto) {
+    if (!producto.codigo) {
+      producto.codigo = generarCodigoProducto(producto.categoria, lista);
+      cambios = true;
+    }
+  });
+
+  if (cambios) localStorage.setItem(PRODUCTOS_KEY, JSON.stringify(lista));
+  return lista;
 }
 
 function guardarProductosPersistidos(lista) {
   localStorage.setItem(PRODUCTOS_KEY, JSON.stringify(lista));
+}
+
+function prefijoCodigoProducto(categoria) {
+  return PREFIJOS_CODIGO[categoria] || 'PRO';
+}
+
+function generarCodigoProducto(categoria, lista, exceptoId) {
+  const prefijo = prefijoCodigoProducto(categoria);
+  const usados = (lista || [])
+    .filter(function (producto) { return producto.id !== exceptoId; })
+    .map(function (producto) { return String(producto.codigo || '').toUpperCase(); });
+
+  let numero = 1;
+  while (usados.indexOf(prefijo + '-' + String(numero).padStart(3, '0')) !== -1) {
+    numero++;
+  }
+  return prefijo + '-' + String(numero).padStart(3, '0');
+}
+
+function codigoProductoValido(codigo) {
+  return /^[A-Z]{3}-\d{3}$/.test(String(codigo || '').trim().toUpperCase());
+}
+
+function codigoProductoExiste(codigo, lista, exceptoId) {
+  const buscado = String(codigo || '').trim().toUpperCase();
+  if (buscado === '') return false;
+  return (lista || []).some(function (producto) {
+    return producto.id !== exceptoId && String(producto.codigo || '').toUpperCase() === buscado;
+  });
+}
+
+function obtenerProductoPorCodigo(codigo, lista) {
+  const buscado = String(codigo || '').trim().toUpperCase();
+  return (lista || []).find(function (producto) {
+    return String(producto.codigo || '').toUpperCase() === buscado;
+  }) || null;
 }
 
 const PRODUCTOS = obtenerProductosPersistidos();

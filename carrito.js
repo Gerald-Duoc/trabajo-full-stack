@@ -201,6 +201,7 @@ function finalizarPedido() {
   const nuevoPedido = {
     id: 'PED-' + Date.now(),
     fecha: new Date().toLocaleString('es-CL'),
+    fechaISO: new Date().toISOString(),
     cliente: usuarioActual ? usuarioActual.nombre : 'Invitado',
     items: items,
     total: total
