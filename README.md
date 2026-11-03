@@ -66,10 +66,23 @@ Validaciones del registro: RUN con dígito verificador (módulo 11), mayoría de
 correo con formato y dominio permitido, región/comuna coherentes, dirección de 5 a 100
 caracteres y contraseña de 6 a 20 caracteres sin espacios.
 
+### Datos de cada producto
+
+`id`, `codigo`, `nombre`, `categoria`, `descripcion`, `precio`, `stock`, `stockCritico`, `img`.
+
+El código se genera automáticamente por categoría (`BEB-001`, `UTI-001`, `ACC-001`) y
+puede editarse en el panel. Los productos antiguos reciben su código al abrir el sitio.
+
+### Pedidos y reportes
+
+Cada pedido guarda `id`, `fecha` (texto), `fechaISO` (para filtros), `cliente`, `items`
+y `total`. El reporte de ventas del panel muestra pedidos, venta total, unidades y ticket
+promedio, se puede filtrar por período y exportar a CSV.
+
 ## Roles
 
-- **Administrador:** panel completo (productos, usuarios, pedidos y alertas).
-- **Vendedor:** productos (sin eliminar) y pedidos.
+- **Administrador:** panel completo (productos, usuarios, pedidos, reportes y alertas).
+- **Vendedor:** productos (sin eliminar), pedidos y avisos de stock.
 - **Cliente:** tienda pública, carrito, contacto y blog.
 
 ## Ramas
