@@ -1,13 +1,36 @@
+/* ==========================================================================
+   Chascone Café — hoja de estilos única
+   Orden: base, navegación, tarjetas, imágenes, panel admin, adaptación móvil.
+   ========================================================================== */
 
-html, body {
+:root {
+  --cafe-oscuro: #1e130c;
+  --cafe-medio: #4a2f1b;
+  --cafe-borde: #6b4426;
+  --cafe-claro: #f7ead8;
+  --cafe-texto: #f2e8dc;
+  --cafe-crema: #faf6f0;
+  --cafe-tinta: #2b1d14;
+}
+
+/* ---------- Base ---------- */
+
+html {
   height: 100%;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-image: url('../imagenes/23669419_6842167.jpg');
+  min-height: 100dvh;
+  color: var(--cafe-tinta);
+  background-color: var(--cafe-crema);
+  background-image:
+    linear-gradient(rgba(250, 246, 240, 0.9), rgba(250, 246, 240, 0.9)),
+    url('../imagenes/23669419_6842167.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -15,42 +38,84 @@ body {
 }
 
 p {
-  color: #000000;
+  color: var(--cafe-tinta);
   font-family: Arial, Helvetica, sans-serif;
 }
 
 main {
-  flex: 1; 
+  flex: 1;
+  padding-top: 2rem;
+  padding-bottom: 3rem;
 }
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+footer {
+  background-color: #5a3821;
+  margin-top: auto;
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+}
+
+/* ---------- Navegación ---------- */
 
 .nav-con-fondo {
   background-color: saddlebrown;
 }
 
-footer {
-  background-color: saddlebrown;
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: 0.2px;
 }
 
+.navbar .nav-link {
+  border-radius: 0.375rem;
+  padding-inline: 0.65rem;
+}
+
+.navbar .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.14);
+}
+
+.navbar .nav-link.active {
+  font-weight: 600;
+}
+
+.nav-con-img1 {
+  background-image: url(../imagenes/23669419_6842167.jpg);
+}
+
+/* ---------- Tarjetas ---------- */
+
 .card {
-  background-color: transparent;
-  border: none;
+  background-color: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(107, 68, 38, 0.22);
+  border-radius: 0.75rem;
+  overflow: hidden;
 }
 
 .card-body {
-  width: 60%;
-  margin: 0 auto;
+  width: 100%;
+  margin: 0;
 }
 
+.card-title {
+  color: var(--cafe-tinta);
+}
+
+/* ---------- Imágenes ---------- */
+
 .img-placeholder {
-  background-color: black;
+  background-color: var(--cafe-oscuro);
   border: 2px dashed #adb5bd;
   color: #6c757d;
   display: flex;
   align-items: center;
   justify-content: center;
-  aspect-ratio: 1 / 1;
-  width: 60%;
-  margin: 0 auto;   
+  width: 100%;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
   text-align: center;
   font-size: 0.9rem;
@@ -62,26 +127,28 @@ footer {
   object-fit: cover;
 }
 
-main {
-  padding-top: 2rem;
-  padding-bottom: 3rem;
-}
-
-.nav-con-img1 {
-  background-image: url(../imagenes/23669419_6842167.jpg);
-}
+/* ---------- Panel administrativo ---------- */
 
 .admin-panel {
-  background-color: rgba(30, 19, 12, 0.92);
-  color: #f2e8dc;
-  border-radius: 8px;
-  padding: 1.2rem;
+  background-color: rgba(30, 19, 12, 0.95);
+  color: var(--cafe-texto);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
 }
 
 .admin-panel h1,
+.admin-panel h2,
 .admin-panel h4,
 .admin-panel h5 {
-  color: #f7ead8;
+  color: var(--cafe-claro);
+}
+
+.admin-panel p {
+  color: var(--cafe-texto);
+}
+
+.admin-panel a {
+  color: #f0c58c;
 }
 
 .admin-panel .text-muted {
@@ -90,20 +157,23 @@ main {
 
 .admin-tabla {
   background-color: rgba(30, 19, 12, 0.9);
-  color: #f2e8dc;
+  color: var(--cafe-texto);
+  margin-bottom: 0;
 }
 
 .admin-tabla thead th {
-  background-color: #4a2f1b;
-  color: #f7ead8;
-  border-color: #6b4426;
+  background-color: var(--cafe-medio);
+  color: var(--cafe-claro);
+  border-color: var(--cafe-borde);
+  vertical-align: middle;
 }
 
 .admin-tabla td,
 .admin-tabla th {
   background-color: transparent;
-  border-color: #6b4426;
-  color: #f2e8dc;
+  border-color: var(--cafe-borde);
+  color: var(--cafe-texto);
+  vertical-align: middle;
 }
 
 .admin-tabla tbody tr:hover {
@@ -120,31 +190,205 @@ main {
 
 .card-admin {
   background-color: rgba(30, 19, 12, 0.92);
-  color: #f2e8dc;
-  border: 1px solid #6b4426;
+  color: var(--cafe-texto);
+  border: 1px solid var(--cafe-borde);
 }
 
 .card-admin label {
-  color: #f7ead8;
+  color: var(--cafe-claro);
 }
 
 .card-admin .form-control,
 .card-admin .form-select {
   background-color: #3a2415;
-  border-color: #6b4426;
-  color: #f7ead8;
+  border-color: var(--cafe-borde);
+  color: var(--cafe-claro);
 }
 
 .card-admin .form-control::placeholder {
   color: #cbb89e;
 }
 
-.tab-admin .nav-link {
+.card-admin .form-text {
   color: #cbb89e;
 }
 
+/* Pestañas del panel: en pantallas chicas se desplazan en horizontal. */
+.tab-admin {
+  border-bottom-color: var(--cafe-borde);
+}
+
+.tab-admin .nav-link {
+  color: #cbb89e;
+  border: 1px solid transparent;
+}
+
+.tab-admin .nav-link:hover {
+  color: var(--cafe-claro);
+}
+
 .tab-admin .nav-link.active {
-  background-color: #4a2f1b;
-  color: #f7ead8;
-  border-color: #6b4426;
+  background-color: var(--cafe-medio);
+  color: var(--cafe-claro);
+  border-color: var(--cafe-borde);
+}
+
+/* ---------- Carrito ---------- */
+
+.tabla-carrito {
+  background-color: rgba(255, 255, 255, 0.88);
+  border-radius: 0.5rem;
+}
+
+.tabla-carrito thead th {
+  background-color: rgba(90, 56, 33, 0.12);
+  white-space: nowrap;
+}
+
+/* ---------- Adaptación a móvil ---------- */
+
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+  }
+
+  .navbar-nav .nav-link {
+    padding-block: 0.55rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  body {
+    /* El fondo fijo se ve mal y rinde peor en móvil. */
+    background-attachment: scroll;
+  }
+
+  main {
+    padding-top: 1.25rem;
+    padding-bottom: 2rem;
+  }
+
+  h1,
+  .h1 {
+    font-size: 1.75rem;
+  }
+
+  h2,
+  .h2 {
+    font-size: 1.4rem;
+  }
+
+  .display-4 {
+    font-size: 2.25rem;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+
+  .img-placeholder {
+    aspect-ratio: 16 / 10;
+  }
+
+  .admin-panel {
+    padding: 0.85rem;
+  }
+
+  .tab-admin {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab-admin .nav-item {
+    flex: 0 0 auto;
+  }
+
+  .tab-admin .nav-link {
+    white-space: nowrap;
+  }
+
+  .table-responsive {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 575.98px) {
+  /* Encabezados del panel que llevan botones o filtros al lado. */
+  .admin-panel .d-flex.justify-content-between {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  /* Botones del carrito a lo ancho. */
+  .acciones-carrito {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .acciones-carrito .btn {
+    width: 100%;
+  }
+
+  /* Tabla del carrito como tarjetas apiladas. */
+  .tabla-carrito thead {
+    display: none;
+  }
+
+  .tabla-carrito,
+  .tabla-carrito tbody,
+  .tabla-carrito tr,
+  .tabla-carrito td {
+    display: block;
+    width: 100%;
+  }
+
+  .tabla-carrito tr {
+    border: 1px solid rgba(107, 68, 38, 0.3);
+    border-radius: 0.5rem;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0.25rem;
+    background-color: rgba(255, 255, 255, 0.92);
+  }
+
+  .tabla-carrito td {
+    border: none;
+    padding: 0.35rem 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  /* Etiqueta de cada dato, ya que en móvil se oculta el encabezado. */
+  .tabla-carrito td::before {
+    content: attr(data-label);
+    flex: 0 0 6rem;
+    font-weight: 600;
+    color: var(--cafe-borde);
+  }
+
+  .tabla-carrito td:empty {
+    display: none;
+  }
+
+  .tabla-carrito td.celda-accion::before {
+    display: none;
+  }
+
+  .tabla-carrito td > .btn {
+    width: 100%;
+  }
+
+  /* Botones de cantidad con área táctil cómoda. */
+  .tabla-carrito td .btn-sm {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .acciones-carrito .btn {
+    min-height: 44px;
+  }
 }

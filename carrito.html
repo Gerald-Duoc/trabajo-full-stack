@@ -10,8 +10,8 @@
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark navbar nav-con-fondo">
     <div class="container">
-      <a class="navbar-brand" href="index.html">Chascone Café</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <a class="navbar-brand" href="index.html">☕ Chascone Café</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Abrir menú de navegación">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navMenu">
@@ -37,7 +37,7 @@
     <div id="contenidoCarrito"></div>
     <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-2">
       <h4 class="mb-0">Total: <span id="totalCarrito">$0</span></h4>
-      <div class="d-flex gap-2">
+      <div class="d-flex gap-2 acciones-carrito">
         <button id="btnVaciar" class="btn btn-outline-danger" onclick="vaciarCarrito()">Vaciar carrito</button>
         <button id="btnFinalizar" class="btn btn-primary btn-lg" onclick="finalizarPedido()">Finalizar compra</button>
       </div>

@@ -126,7 +126,7 @@ function renderizarCarritoCompleto() {
     return;
   }
 
-  let html = '<div class="table-responsive"><table class="table table-hover align-middle">' +
+  let html = '<div class="table-responsive"><table class="table table-hover align-middle tabla-carrito">' +
     '<thead><tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Subtotal</th><th></th></tr></thead><tbody>';
 
   let total = 0;
@@ -138,19 +138,19 @@ function renderizarCarritoCompleto() {
     const enLimite = item.cantidad >= stock;
     total += subtotal;
     html += '<tr>' +
-      '<td><div class="d-flex align-items-center gap-2">' +
+      '<td data-label="Producto"><div class="d-flex align-items-center gap-2">' +
       '<img src="' + producto.img + '" alt="' + producto.nombre + '" style="width:60px;height:60px;object-fit:cover;border-radius:6px;">' +
       '<div><div>' + producto.nombre + '</div>' +
       '<small class="text-muted">Stock disponible: ' + stock + '</small></div>' +
       '</div></td>' +
-      '<td>' + formatearPrecio(producto.precio) + '</td>' +
-      '<td><div class="d-flex align-items-center gap-2">' +
+      '<td data-label="Precio">' + formatearPrecio(producto.precio) + '</td>' +
+      '<td data-label="Cantidad"><div class="d-flex align-items-center gap-2">' +
       '<button class="btn btn-sm btn-outline-secondary" onclick="cambiarCantidad(\'' + item.id + '\', -1)">-</button>' +
       '<span>' + item.cantidad + '</span>' +
       '<button class="btn btn-sm btn-outline-secondary" ' + (enLimite ? 'disabled' : '') + ' onclick="cambiarCantidad(\'' + item.id + '\', 1)">+</button>' +
       '</div></td>' +
-      '<td><strong>' + formatearPrecio(subtotal) + '</strong></td>' +
-      '<td><button class="btn btn-sm btn-outline-danger" onclick="eliminarDelCarrito(\'' + item.id + '\')">Eliminar</button></td>' +
+      '<td data-label="Subtotal"><strong>' + formatearPrecio(subtotal) + '</strong></td>' +
+      '<td class="celda-accion"><button class="btn btn-sm btn-outline-danger" onclick="eliminarDelCarrito(\'' + item.id + '\')">Eliminar</button></td>' +
       '</tr>';
   });
 

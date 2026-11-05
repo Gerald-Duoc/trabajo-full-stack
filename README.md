@@ -95,6 +95,23 @@ cuántos mensajes están sin leer.
 El blog permite buscar artículos por texto (sin distinguir tildes ni mayúsculas) y filtrar
 por categoría: Salud, Preparación y Curiosidades.
 
+## Diseño adaptable
+
+La hoja `estilos/estilos.css` usa variables de color y los puntos de corte de Bootstrap:
+
+- **Escritorio (≥ 992 px):** menú horizontal, tarjetas con imagen 4:3 y fondo fijo.
+- **Tablet (768–991 px):** menú colapsable, contenido en una columna según la grilla y
+  fondo sin desplazamiento fijo.
+- **Móvil (≤ 767 px):** tipografías reducidas, imágenes 16:10, pestañas del panel con
+  desplazamiento horizontal y tablas dentro de contenedores con scroll.
+- **Móvil pequeño (≤ 575 px):** la tabla del carrito se muestra como tarjetas con
+  etiquetas, los botones de compra ocupan todo el ancho y los controles de cantidad
+  tienen 44 px de área táctil.
+
+El botón del menú colapsable incluye `aria-controls`, `aria-expanded` y `aria-label`
+para lectores de pantalla, y las tablas del panel se desplazan en horizontal sin
+desbordar la página.
+
 ## Roles
 
 - **Administrador:** panel completo (productos, usuarios, pedidos, mensajes, reportes y alertas).
