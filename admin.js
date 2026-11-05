@@ -519,13 +519,14 @@ function renderizarPedidos() {
       '<div><strong>' + pedido.id + '</strong> — ' + pedido.cliente + '</div>' +
       '<div class="text-muted">' + pedido.fecha + '</div>' +
       '</div>' +
+      '<div class="table-responsive">' +
       '<table class="table table-sm mt-2 mb-2 admin-tabla"><thead><tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Subtotal</th></tr></thead><tbody>';
 
     (pedido.items || []).forEach(function (item) {
       html += '<tr><td>' + item.nombre + '</td><td>' + formatearPrecio(item.precio) + '</td><td>' + item.cantidad + '</td><td>' + formatearPrecio(item.precio * item.cantidad) + '</td></tr>';
     });
 
-    html += '</tbody></table>' +
+    html += '</tbody></table></div>' +
       '<div class="text-end"><strong>Total: ' + formatearPrecio(pedido.total) + '</strong></div>' +
       '</div>';
   });
